@@ -22,7 +22,7 @@ def draw_text(surface, font, text, pos, color=COLOR_TEXT):
     surface.blit(font.render(text, True, color), pos)
 
 
-def draw_banner(surface, font, text):
+def draw_banner(surface, font, text, y_offset=0):
     surf = font.render(text, True, (180, 40, 40))
-    rect = surf.get_rect(center=(surface.get_width() // 2, surface.get_height() // 2))
+    rect = surf.get_rect(center=(surface.get_width() // 2, surface.get_height() // 2 + y_offset))
     surface.blit(surf, rect)

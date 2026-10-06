@@ -27,6 +27,8 @@ def main():
                 running = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 engine.handle_click(event.pos)
+            elif event.type == pygame.KEYDOWN:      # new: forward key presses
+                engine.handle_key(event.key)        # new: R restarts the round
 
         engine.update()
         engine.draw(screen, font)
