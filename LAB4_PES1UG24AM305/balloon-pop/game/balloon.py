@@ -6,14 +6,25 @@ how click detection should work.
 
 import pygame
 
+# Each balloon type defines its color and the score change when popped.
+BALLOON_TYPES = {
+    "normal":  {"color": (220, 40, 40),  "points": 10},   # red
+    "bonus":   {"color": (230, 190, 40), "points": 30},   # gold
+    "penalty": {"color": (90, 30, 110),  "points": -20},  # dark purple
+}
+
 
 class Balloon:
-    def __init__(self, x, y, radius, speed, color=(220, 90, 120)):
+    def __init__(self, x, y, radius, speed, balloon_type="normal"):
+        if balloon_type not in BALLOON_TYPES:
+            raise ValueError(f"Unknown balloon type: {balloon_type}")
         self.x = x
         self.y = y
         self.radius = radius
         self.speed = speed
-        self.color = color
+        self.balloon_type = balloon_type
+        self.color = BALLOON_TYPES[balloon_type]["color"]
+        self.points = BALLOON_TYPES[balloon_type]["points"]
 
     def update(self):
         self.y += self.speed
