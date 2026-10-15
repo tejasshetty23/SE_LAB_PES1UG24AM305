@@ -9,6 +9,7 @@ VALID_STATUSES = ["placed", "cooking", "out_for_delivery", "delivered"]
 orders = {}
 menu = {}
 
+
 def create_order(customer, items):
     """Create an order and return its id.
 
@@ -23,8 +24,14 @@ def create_order(customer, items):
     if unknown:
         raise ValueError(f"Not on the menu: {', '.join(unknown)}")
     order_id = max(orders, default=0) + 1
-    orders[order_id] = {"customer": customer, "items": items, "total": sum(menu[i] for i in items), "status": "placed"}
+    orders[order_id] = {
+        "customer": customer,
+        "items": items,
+        "total": sum(menu[i] for i in items),
+        "status": "placed",
+    }
     return order_id
+
 
 def update_order_status(order_id, status):
     """Set an order's status; raise ValueError/KeyError on bad input."""
@@ -34,6 +41,7 @@ def update_order_status(order_id, status):
         orders[order_id]["status"] = status
     except KeyError as exc:
         raise KeyError(f"Unknown order id: {order_id}") from exc
+
 
 def read_menu_config(file="menu.json"):
     """Load the menu from a JSON file, falling back to the default menu."""
@@ -45,14 +53,19 @@ def read_menu_config(file="menu.json"):
     menu.clear()
     menu.update(loaded)
 
+
 def daily_revenue():
     """Return the total value of delivered orders."""
-    return sum(o["total"] for o in orders.values() if o["status"] == "delivered")
+    return sum(
+        o["total"] for o in orders.values() if o["status"] == "delivered"
+    )
+
 
 def backup_orders(file="orders.json"):
     """Write all orders to a JSON file."""
     with open(file, "w", encoding="utf-8") as f:
         json.dump(orders, f)
+
 
 def restore_orders(file="orders.json"):
     """Replace the current orders with those stored in a JSON backup."""
@@ -62,11 +75,13 @@ def restore_orders(file="orders.json"):
     orders.clear()
     orders.update(restored)
 
+
 def print_queue():
     """Print every order with its customer, status and total."""
     print(f"Order queue at {datetime.now()}")
     for order_id, order in orders.items():
         print(order_id, order["customer"], order["status"], order["total"])
+
 
 def main():
     """Run a small demo of the order queue."""
@@ -77,7 +92,8 @@ def main():
             create_order(customer, items)
         except ValueError as err:
             print("Order rejected:", err)
-    for order_id, status in ((asha, "teleported"), (42, "delivered"), (asha, "delivered")):
+    updates = ((asha, "teleported"), (42, "delivered"), (asha, "delivered"))
+    for order_id, status in updates:
         try:
             update_order_status(order_id, status)
         except (ValueError, KeyError) as err:
@@ -86,6 +102,7 @@ def main():
     backup_orders()
     restore_orders()
     print_queue()
+
 
 if __name__ == "__main__":
     main()
