@@ -1,6 +1,4 @@
 """Property-based fuzz tests for the Lab 7 processor functions."""
-import math
-
 import pytest
 from hypothesis import given, strategies as st
 
